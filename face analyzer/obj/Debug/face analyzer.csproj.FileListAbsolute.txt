@@ -1,0 +1,5 @@
+C:\Users\ryanl\source\repos\face analyzer\face analyzer\obj\Debug\face analyzer.csprojAssemblyReference.cache
+C:\Users\ryanl\source\repos\face analyzer\face analyzer\obj\Debug\face_analyzer.Form1.resources
+C:\Users\ryanl\source\repos\face analyzer\face analyzer\obj\Debug\face_analyzer.Properties.Resources.resources
+C:\Users\ryanl\source\repos\face analyzer\face analyzer\obj\Debug\face analyzer.csproj.GenerateResource.cache
+C:\Users\ryanl\source\repos\face analyzer\face analyzer\obj\Debug\face analyzer.csproj.CoreCompileInputs.cache
