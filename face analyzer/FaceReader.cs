@@ -98,15 +98,6 @@ namespace face_analyzer
             return (Emotion)index;
         }
 
-        private double curve(params FacePoint[] points)
-        {
-            //f(x)=ax^2+by+c
-            double[][] eq = new double[3][];
-            FacePoint left = points[48];
-            FacePoint mid = points[57];
-            FacePoint right = points[54];
-        }
-
         private double rateHappy(Face f)
         {
             double rating = 0;

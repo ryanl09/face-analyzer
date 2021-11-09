@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Curve.cs" />
     <Compile Include="Emotion.cs" />
+    <Compile Include="Equation.cs" />
     <Compile Include="Face.cs" />
     <Compile Include="FacePoint.cs" />
     <Compile Include="FaceReader.cs" />

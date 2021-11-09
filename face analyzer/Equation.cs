@@ -6,21 +6,20 @@ using System.Threading.Tasks;
 
 namespace face_analyzer
 {
-    public class Line
+    public class Equation
     {
-        private FacePoint _a;
-        private FacePoint _b;
-        private double _slope;
+        private double _a;
+        private double _b;
+        private double? _c;
 
-        public Line() { }
-        public Line(FacePoint left, FacePoint right) 
+        public Equation(double a, double b, double? c = null)
         {
-            _a = left;
-            _b = right;
-            calcSlope();
+            _a = a;
+            _b = b;
+            _c = c;
         }
 
-        public FacePoint left
+        public double a
         {
             get
             {
@@ -32,7 +31,7 @@ namespace face_analyzer
             }
         }
 
-        public FacePoint right
+        public double b
         {
             get
             {
@@ -44,19 +43,16 @@ namespace face_analyzer
             }
         }
 
-        public double slope
+        public double? c
         {
             get
             {
-                return _slope;
+                return _c;
             }
-        }
-
-        private void calcSlope()
-        {
-            double y = right.y - left.y;
-            double x = right.x - left.x;
-            _slope = y / x;
+            set
+            {
+                _c = value;
+            }
         }
     }
 }

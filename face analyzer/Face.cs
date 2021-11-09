@@ -9,8 +9,10 @@ namespace face_analyzer
     public class Face
     {
         private FacePoint[] _points;
+        private FacePoint[] _pointsR;
         private Emotion _emotion;
         private double _slant;
+        private Curve _mouth;
 
         private const int x = 0;
         private const int y = 1;
@@ -36,6 +38,14 @@ namespace face_analyzer
             }
         }
 
+        public FacePoint [] pointsR
+        {
+            get
+            {
+                return _pointsR;
+            }
+        }
+
         public void addPoint(double x, double y)
         {
             int length = _points.Length;
@@ -44,6 +54,7 @@ namespace face_analyzer
             {
                 _slant = calculateSlant();
                 rotate();
+                calculateMouth();
             }
         }
 
@@ -75,6 +86,23 @@ namespace face_analyzer
             }
         }
 
+        public double height
+        {
+            get
+            {
+                return (_points[19].y + _points[24].y)/2-_points[8].y;
+            }
+        }
+
+        public Curve mouth
+        {
+            get
+            {
+                return _mouth;
+            }
+        }
+
+        //get face rotation estimate by averaging the slopes of facial landmarks
         private double calculateSlant()
         {
             double s = 0;
@@ -107,21 +135,29 @@ namespace face_analyzer
             return s;
         }
 
+        //get angle the face is rotated in and reposition points 
         private void rotate()
         {
             double theta = Math.Tan(slant);
             for (int i = 0; i < _points.Length; i++)
             {
-                FacePoint p = _points[i];
                 double newX = _points[i].x * Math.Cos(theta) - _points[i].y * Math.Sin(theta);
                 double newY = _points[i].y * Math.Cos(theta) + _points[i].x * Math.Sin(theta);
-                _points[i] = new FacePoint(newX, newY);
+                _pointsR[i] = new FacePoint(newX, newY);
             }
         }
 
         private double py(double a, double b)
         {
             return Math.Sqrt(a*a+b*b);
+        }
+
+        public void calculateMouth()
+        {
+            FacePoint left = _points[48];
+            FacePoint mid = _points[57];
+            FacePoint right = _points[54];
+            _mouth =  new Curve(left, right, mid);
         }
     }
 }
