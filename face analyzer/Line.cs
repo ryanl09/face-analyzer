@@ -58,5 +58,11 @@ namespace face_analyzer
             double x = right.x - left.x;
             _slope = y / x;
         }
+
+        public override string ToString()
+        {
+            return "Left: " + left.ToString() + "\n" +
+                "Right: (" + right.ToString() + ")";
+        }
     }
 }

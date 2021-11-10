@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace face_analyzer
 {
@@ -10,6 +11,8 @@ namespace face_analyzer
     {
         private Line line;
         private FacePoint mid;
+        private FacePoint _center;
+        private double _radius = 1;
 
         public Curve() { }
         public Curve(FacePoint left, FacePoint right, FacePoint mid)
@@ -19,38 +22,66 @@ namespace face_analyzer
             calculate();
         }
 
+        public Line getLine
+        {
+            get
+            {
+                return line;
+            }
+        }
+
+        public FacePoint getMid
+        {
+            get
+            {
+                return mid;
+            }
+        }
+
+        public FacePoint center
+        {
+            get
+            {
+                return _center;
+            }
+        }
+
+        public double radius
+        {
+            get
+            {
+                return _radius;
+            }
+        }
+
         private void calculate()
         {
+            double x12 = line.left.x - line.right.x;
+            double x13 = line.left.x - mid.x;
+            double y12 = line.left.y - line.right.y;
+            double y13 = line.left.y - mid.y;
+            double y31 = mid.y - line.left.y;
+            double y21 = line.right.y - line.left.y;
+            double x31 = mid.x - line.left.x;
+            double x21 = line.right.x - line.left.x;
 
+            double sx13 = (double)(Math.Pow(line.left.x, 2) - Math.Pow(mid.x, 2));
+            double sy13 = (double)(Math.Pow(line.left.y, 2) - Math.Pow(mid.y, 2));
+            double sx21 = (double)(Math.Pow(line.right.x, 2) - Math.Pow(line.left.x, 2));
+            double sy21 = (double)(Math.Pow(line.right.y, 2) - Math.Pow(line.left.y, 2));
 
-            //determinant for t area to get radius
-            /*
-            double a = dist(line.right,mid);
-            double b = dist(line.left,mid);
-            double c = dist(line.left,line.right);
-            double d1 = line.left.x * (line.right.y * mid.y);
-            double d2 = line.right.x * (mid.y - line.left.y);
-            double d3 = mid.x * (line.left.y - line.right.y);
-            double S = 0.5 * Math.Abs(d1+d2+d3);
-            double radius = (a * b * c) / (4 * S);
-            */
+            double a = ((sx13) * (y12) + (sy13) * (y12) + (sx21) * (y13) + (sy21) * (y13))
+                    / (2 * ((x31) * (y12) - (x21) * (y13)));
+            double b = ((sx13) * (x12) + (sy13) * (x12) + (sx21) * (x13) + (sy21) * (x13))
+                    / (2 * ((y31) * (x12) - (y21) * (x13)));
+            double c = -(double)Math.Pow(line.left.x, 2) - (double)Math.Pow(line.left.y, 2) - 2 * a * line.left.x - 2 * b * line.left.y;
 
-            Line line1 = new Line(line.left, line.right);
-            Line line2 = new Line(mid, line.right);
-
-            Equation eq1 = new Equation(-1*(1/line1.slope), yInt(line.right.x, line.right.y, line1.slope));
-            Equation eq2 = new Equation(-1*(1/line2.slope), yInt(line.right.x, line.right.y, line2.slope));
-
-            double a1 = -1 * eq1.a;
-            double a2 = -1 * eq2.a;
-            double delta = a1 - a2;
-            if (delta == 0)
-            { 
-                return;
-            }
-            double cX = (eq1.b-eq2.b)/delta;
-            double cY = (a1*eq2.b-a2*eq1.b)/delta;
-            FacePoint center = new FacePoint(cX, cY);
+            double h = -a;
+            double k = -b;
+            double sqr_of_r = h * h + k * k - c;
+            double r = Math.Round(Math.Sqrt(sqr_of_r), 5);
+            _center = new FacePoint(h, k);
+            _radius = r;
         }
 
         private double yInt(double x, double y, double m)

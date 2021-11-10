@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using DlibDotNet;
 using Rectangle = System.Drawing.Rectangle;
 using Point = DlibDotNet.Point;
+using System.Windows.Forms;
 
 namespace face_analyzer
 {
@@ -46,7 +47,6 @@ namespace face_analyzer
             Thread read = new Thread(() =>
             {
                 //get facial landmarks
-                int[][] points = new int[68][];
                    using (FrontalFaceDetector faceDetector = Dlib.GetFrontalFaceDetector())
                    {
                        using (ShapePredictor shapePredictor = ShapePredictor.Deserialize("shapes.dat"))
@@ -67,23 +67,21 @@ namespace face_analyzer
                                for (int j = 0; j < shape.Parts; j++)
                                {
                                    Point point = shape.GetPart((uint)j);
-                                   newface.addPoint(point.X, point.Y);
+                                   newface.addPoint(new FacePoint(point.X, point.Y), j);
                                }
+                                newface.calculate();
+                                newface.emotion = readEmotion(newface);
                                _faces.Add(newface);
                            }
                        }
                    }
-                   //check emotion
-
-
-
-               });
+            });
             read.Start();
             read.Join();
             return _faces;
         }
 
-        public Emotion readEmotion(Face f)
+        private Emotion readEmotion(Face f)
         {
             double[] vals = new double[4] { rateHappy(f), rateSad(f), rateAngry(f), rateNeutral(f) };
             int index = 0;
@@ -101,13 +99,23 @@ namespace face_analyzer
         private double rateHappy(Face f)
         {
             double rating = 0;
-
+            double cy = f.mouth.center.y;
+            double my = f.mouth.getMid.y;
+            if (my > cy)
+            {
+                rating = 1;
+            }
             return rating;
         }
         private double rateSad(Face f)
         {
             double rating = 0;
-
+            double cy = f.mouth.center.y;
+            double my = f.mouth.getMid.y;
+            if (my < cy)
+            {
+                rating = 1;
+            }
             return rating;
         }
         private double rateAngry(Face f)

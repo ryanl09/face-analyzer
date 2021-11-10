@@ -35,6 +35,28 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="DlibDotNet, Version=19.21.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DlibDotNet.19.21.0.20210302\lib\netstandard2.0\DlibDotNet.dll</HintPath>
@@ -57,11 +79,9 @@
   <ItemGroup>
     <Compile Include="Curve.cs" />
     <Compile Include="Emotion.cs" />
-    <Compile Include="Equation.cs" />
     <Compile Include="Face.cs" />
     <Compile Include="FacePoint.cs" />
     <Compile Include="FaceReader.cs" />
-    <Compile Include="fin.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

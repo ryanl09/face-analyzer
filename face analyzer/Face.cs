@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace face_analyzer
 {
     public class Face
     {
-        private FacePoint[] _points;
-        private FacePoint[] _pointsR;
+        private FacePoint[] _points = new FacePoint[68];
+        private int pts = 0;
+        private FacePoint[] _pointsR = new FacePoint[68];
         private Emotion _emotion;
         private double _slant;
         private Curve _mouth;
@@ -36,6 +38,10 @@ namespace face_analyzer
             {
                 return _points;
             }
+            set
+            {
+                _points = value;
+            }
         }
 
         public FacePoint [] pointsR
@@ -46,16 +52,11 @@ namespace face_analyzer
             }
         }
 
-        public void addPoint(double x, double y)
+        public void calculate()
         {
-            int length = _points.Length;
-            _points[length] = new FacePoint(x, y);
-            if (_points.Length == 68)
-            {
-                _slant = calculateSlant();
-                rotate();
-                calculateMouth();
-            }
+            _slant = calculateSlant();
+            rotate();
+            calculateMouth();
         }
 
         public Emotion emotion
@@ -102,6 +103,12 @@ namespace face_analyzer
             }
         }
 
+        public void addPoint(FacePoint point, int index)
+        {
+            _points[index] = point;
+            pts++;
+        }
+
         //get face rotation estimate by averaging the slopes of facial landmarks
         private double calculateSlant()
         {
@@ -138,7 +145,7 @@ namespace face_analyzer
         //get angle the face is rotated in and reposition points 
         private void rotate()
         {
-            double theta = Math.Tan(slant);
+            double theta = Math.Tan(slant * Math.PI / 180);
             for (int i = 0; i < _points.Length; i++)
             {
                 double newX = _points[i].x * Math.Cos(theta) - _points[i].y * Math.Sin(theta);
@@ -147,16 +154,19 @@ namespace face_analyzer
             }
         }
 
-        private double py(double a, double b)
-        {
-            return Math.Sqrt(a*a+b*b);
-        }
-
         public void calculateMouth()
         {
             FacePoint left = _points[48];
-            FacePoint mid = _points[57];
             FacePoint right = _points[54];
+            int index = 50;
+            double yAvg = (left.y + right.y) / 2;
+            double y1 = _points[57].y;
+            double y2 = _points[50].y;
+            if(Math.Abs(yAvg-y1) >= Math.Abs(yAvg-y2))
+            {
+                index = 57;
+            }
+            FacePoint mid = _points[index];
             _mouth =  new Curve(left, right, mid);
         }
     }
